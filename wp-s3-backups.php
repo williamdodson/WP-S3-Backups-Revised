@@ -156,6 +156,26 @@ class WPS3B {
 								<input <?php if ( in_array('config', $sections) ) echo 'checked="checked"' ?> type="checkbox" name="s3b-section[]" value="config" id="s3b-section-config" />
 								<?php _e('Config file', 'wp-s3-backups') ?>
 							</label><br />
+							<!-- 
+							WVD: 
+							Added code here for backing up the root CSS, javascript and image folders
+							2010-07-27 
+							-->
+							<div style="background: LightCyan; border:1px solid LightSkyBlue;color: navy;margin-bottom: 0.75em;padding: 0.75em;text-shadow: 2px 2px 1px white;">
+  							<label for="s3b-section-css">
+  								<input <?php if ( in_array('css', $sections) ) echo 'checked="checked"' ?> type="checkbox" name="s3b-section[]" value="css" id="s3b-section-css" />
+  								<?php _e('Root CSS Folder', 'wp-s3-backups') ?>
+  							</label><br />
+  							<label for="s3b-section-js">
+  								<input <?php if ( in_array('js', $sections) ) echo 'checked="checked"' ?> type="checkbox" name="s3b-section[]" value="js" id="s3b-section-js" />
+  								<?php _e('Root JavaScript Folder', 'wp-s3-backups') ?>
+  							</label><br />
+  							<label for="s3b-section-img">
+  								<input <?php if ( in_array('img', $sections) ) echo 'checked="checked"' ?> type="checkbox" name="s3b-section[]" value="img" id="s3b-section-img" />
+  								<?php _e('Root Image Folder', 'wp-s3-backups') ?>
+  							</label><br />
+							</div>
+							<!-- /WVD -->
 							<label for="s3b-section-database">
 								<input <?php if ( in_array('database', $sections) ) echo 'checked="checked"' ?> type="checkbox" name="s3b-section[]" value="database" id="s3b-section-database" />
 								<?php _e('Database dump', 'wp-s3-backups') ?>
@@ -248,6 +268,9 @@ class WPS3B {
 		$zip = new PclZip($file);
 		$backups = array();
 		if ( in_array('config', $sections) ) $backups[] = ABSPATH . '/wp-config.php';
+		if ( in_array('css', $sections) ) $backups = array_merge($backups, WPS3B::rscandir(ABSPATH . 'css/'));
+		if ( in_array('js', $sections) ) $backups = array_merge($backups, WPS3B::rscandir(ABSPATH . 'js/'));
+		if ( in_array('img', $sections) ) $backups = array_merge($backups, WPS3B::rscandir(ABSPATH . 'img/'));
 		if ( in_array('database', $sections) ) {
 			$tables = $wpdb->get_col("SHOW TABLES LIKE '" . $wpdb->prefix . "%'");
 			$result = shell_exec('mysqldump --single-transaction -h ' . DB_HOST . ' -u ' . DB_USER . ' --password="' . DB_PASSWORD . '" ' . DB_NAME . ' ' . implode(' ', $tables) . ' > ' .  WP_CONTENT_DIR . '/uploads/wp-s3-database-backup.sql');
