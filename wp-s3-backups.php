@@ -170,9 +170,9 @@ class WPS3B {
   								<input <?php if ( in_array('js', $sections) ) echo 'checked="checked"' ?> type="checkbox" name="s3b-section[]" value="js" id="s3b-section-js" />
   								<?php _e('Root JavaScript Folder', 'wp-s3-backups') ?>
   							</label><br />
-  							<label for="s3b-section-img">
-  								<input <?php if ( in_array('img', $sections) ) echo 'checked="checked"' ?> type="checkbox" name="s3b-section[]" value="img" id="s3b-section-img" />
-  								<?php _e('Root Image Folder', 'wp-s3-backups') ?>
+  							<label for="s3b-section-media">
+  								<input <?php if ( in_array('media', $sections) ) echo 'checked="checked"' ?> type="checkbox" name="s3b-section[]" value="media" id="s3b-section-media" />
+  								<?php _e('Root Media Folder', 'wp-s3-backups') ?>
   							</label><br />
 							</div>
 							<!-- /WVD -->
@@ -270,7 +270,7 @@ class WPS3B {
 		if ( in_array('config', $sections) ) $backups[] = ABSPATH . '/wp-config.php';
 		if ( in_array('css', $sections) ) $backups = array_merge($backups, WPS3B::rscandir(ABSPATH . 'css/'));
 		if ( in_array('js', $sections) ) $backups = array_merge($backups, WPS3B::rscandir(ABSPATH . 'js/'));
-		if ( in_array('img', $sections) ) $backups = array_merge($backups, WPS3B::rscandir(ABSPATH . 'img/'));
+		if ( in_array('media', $sections) ) $backups = array_merge($backups, WPS3B::rscandir(ABSPATH . 'media/'));
 		if ( in_array('database', $sections) ) {
 			$tables = $wpdb->get_col("SHOW TABLES LIKE '" . $wpdb->prefix . "%'");
 			$result = shell_exec('mysqldump --single-transaction -h ' . DB_HOST . ' -u ' . DB_USER . ' --password="' . DB_PASSWORD . '" ' . DB_NAME . ' ' . implode(' ', $tables) . ' > ' .  WP_CONTENT_DIR . '/uploads/wp-s3-database-backup.sql');
